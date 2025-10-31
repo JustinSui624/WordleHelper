@@ -148,7 +148,7 @@ def load_words_from_file(filename: str) -> List[str]:
 
 def main():
     """Main game loop"""
-    print("🎯 Welcome to Python Wordle!")
+    print("Welcome to Wordle!")
     print("Guess the 5-letter word in 6 attempts or less!")
     print("Feedback: [G]reen = correct letter & position, (Y)ellow = correct letter wrong position, Gray = letter not in word")
     
