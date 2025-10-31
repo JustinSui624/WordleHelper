@@ -153,7 +153,7 @@ def main():
     print("Feedback: [G]reen = correct letter & position, (Y)ellow = correct letter wrong position, Gray = letter not in word")
     
     # Try to load words from file, or use default
-    word_list = load_words_from_file("wordle_words.txt")
+    word_list = load_words_from_file("word_list.txt")
     game = WordleGame(word_list)
     
     while not game.game_over:
