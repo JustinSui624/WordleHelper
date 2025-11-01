@@ -9,13 +9,7 @@ class WordleGame:
         """
         if word_list is None:
             self.word_list = [
-                "APPLE", "BRAVE", "CLIMB", "DREAM", "EARTH", "FLAME", "GRAPE", "HOUSE",
-                "IGLOO", "JUICE", "KNIGHT", "LIGHT", "MAGIC", "NIGHT", "OCEAN", "PEACE",
-                "QUEEN", "RIVER", "SMILE", "TIGER", "UMBRA", "VOICE", "WATER", "YOUTH",
-                "ZEBRA", "ALBUM", "BEACH", "CHESS", "DANCE", "EAGLE", "FROST", "GHOST",
-                "HONEY", "IVORY", "JOKER", "LEMON", "MUSIC", "NINJA", "OLIVE", "PIANO",
-                "ROBOT", "SHARK", "TULIP", "URBAN", "VIXEN", "WHALE", "XENON", "YACHT",
-                "ABYSS", "BLITZ", "CYCLE", "DWARF", "EMBED", "FJORD", "GYPSY", "HAZEL"
+                "Sucks"
             ]
         else:
             self.word_list = [word.upper() for word in word_list if len(word) == 5]
@@ -180,5 +174,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
 
 
