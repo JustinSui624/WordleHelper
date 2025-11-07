@@ -13,7 +13,7 @@ src_path = os.path.join(project_root, 'src')
 if src_path not in sys.path:
     sys.path.insert(0, src_path)
 
-# Import AI components (from your AI part)
+# Import AI components (from  AI part)
 from solver import WordleSolver
 from knowledge import WordleKnowledge
 
@@ -150,7 +150,7 @@ class WordleGame:
         return colored_str
 
 
-# Wordle Helper & AI Integration (combined from WordleHelper.py + your AI part)
+# Wordle Helper & AI Integration (combined from WordleHelper.py +  AI part)
 class WordleHelper:
     def __init__(self, word_list_path: str = "wordle_answers.txt"):
         self.all_words = self.load_words_from_file(word_list_path)
