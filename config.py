@@ -1,14 +1,20 @@
+# config.py
+
 from pathlib import Path
 
-DATA_DIR = Path(__file__).parent.parent / "data"
-WORD_LIST_PATH = DATA_DIR / "wordle_answers.txt"
-GUESSABLE_PATH = DATA_DIR / "wordle_guessable.txt"
+# --- WORD LISTS ---
+WORD_LIST_PATH = Path("wordle_answers.txt")
+GUESSABLE_PATH = Path("word_list.txt")
 
-ALPHA = 0.1
-GAMMA = 0.9
-EPSILON = 0.08
+# Default/Fallback words (used if file loading fails)
+# These must be the same size for the code to run initially
+ANSWERS = ["SLATE", "CRANE", "TRACE", "RAISE", "STARE", "ABACK", "ABATE", "APPLE", "BRAVE", "CLIMB", "SOLVE", "TRAIN", "HOUSE", "EARTH", "DREAM"]
+GUESSABLE = ANSWERS
+
+# --- GAME SETTINGS ---
 MAX_GUESSES = 6
 
-# Demo hardcoded (expand with files)
-ANSWERS = ["crane", "slate", "trace", "raise", "stare", "jazz", "flood", "aback", "abase"]
-GUESSABLE = ANSWERS + ["audio", "about", "alert", "being", "below", "abide", "acrid"]
+# --- RL AGENT SETTINGS ---
+ALPHA = 0.1    # Learning rate
+GAMMA = 0.9    # Discount factor
+EPSILON = 0.3  # Exploration rate (30% chance to use RL)

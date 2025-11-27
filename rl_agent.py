@@ -22,11 +22,14 @@ class RLAgent:
         if random.random() < EPSILON:
             return random.choice(list(candidates))
         q_vals = {w: self.q_table.get(f"{state}_{w}", 0) for w in candidates}
+        if not q_vals:
+             return random.choice(list(candidates)) # Fallback if no Q-values found
         return max(q_vals, key=q_vals.get)
 
     def update(self, state: str, action: str, reward: float, next_state: str):
         old = self.q_table.get(f"{state}_{action}", 0)
-        future = max(self.q_table.get(f"{next_state}_{w}", 0) for w in ['A', 'B', 'C', 'D', 'E', action])  # Approx
+        # Simplified future action space for approximation
+        future = max(self.q_table.get(f"{next_state}_{w}", 0) for w in ['A', 'B', 'C', 'D', 'E', action])
         self.q_table[f"{state}_{action}"] = old + ALPHA * (reward + GAMMA * future - old)
 
     def save(self, path="q_table.json"):
