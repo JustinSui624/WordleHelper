@@ -1,8 +1,9 @@
+# knowledge.py
 from typing import List, Set, Tuple
 from collections import Counter
 from config import ANSWERS, GUESSABLE, WORD_LIST_PATH, GUESSABLE_PATH
 from pathlib import Path
-from search import feedback_pattern  # Import the proven feedback simulator
+
 
 class WordleKnowledge:
     def __init__(self):
@@ -12,6 +13,7 @@ class WordleKnowledge:
         except FileNotFoundError:
             self.answers = [w.upper() for w in ANSWERS]
             self.guessable = [w.upper() for w in GUESSABLE]
+
         self.possible = set(self.answers)
         self.constraints: List[Tuple[str, str]] = []
 
@@ -21,9 +23,8 @@ class WordleKnowledge:
         self.possible = new_possible
 
     def _matches_feedback(self, word: str, guess: str, feedback: str) -> bool:
-        # Simple & accurate: Simulate feedback for this word as answer
-        computed_feedback = feedback_pattern(guess, word)
-        return computed_feedback == feedback
+        from search import feedback_pattern  # Localized import
+        return feedback_pattern(guess, word) == feedback
 
     def reset(self):
         self.possible = set(self.answers)

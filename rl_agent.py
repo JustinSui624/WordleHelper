@@ -1,7 +1,6 @@
 import random
 import json
 from typing import Dict
-from collections import Counter
 from config import ALPHA, GAMMA, EPSILON
 
 class RLAgent:
@@ -22,14 +21,19 @@ class RLAgent:
         if random.random() < EPSILON:
             return random.choice(list(candidates))
         q_vals = {w: self.q_table.get(f"{state}_{w}", 0) for w in candidates}
-        if not q_vals:
-             return random.choice(list(candidates)) # Fallback if no Q-values found
+        if not q_vals: return random.choice(list(candidates))
         return max(q_vals, key=q_vals.get)
 
     def update(self, state: str, action: str, reward: float, next_state: str):
-        old = self.q_table.get(f"{state}_{action}", 0)
-        # Simplified future action space for approximation
-        future = max(self.q_table.get(f"{next_state}_{w}", 0) for w in ['A', 'B', 'C', 'D', 'E', action])
+        old = self.q_table.get(f"{state}_{action}", 0.0)
+
+        # SAFEST FIX: if no future values exist, use 0
+        future_values = [self.q_table.get(f"{next_state}_{w}", 0.0)
+                         for w in self.q_table.keys()
+                         if w.startswith(next_state + "_")]
+
+        future = max(future_values) if future_values else 0.0
+
         self.q_table[f"{state}_{action}"] = old + ALPHA * (reward + GAMMA * future - old)
 
     def save(self, path="q_table.json"):

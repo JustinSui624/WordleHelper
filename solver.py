@@ -1,3 +1,5 @@
+# solver.py (Updated for Dual Mode)
+
 import random
 from knowledge import WordleKnowledge
 from planning import Planner
@@ -15,24 +17,18 @@ class WordleSolver:
         self.turn = 0
         self.game_over = False
         self.answer = None
-        self.last_guess = ""  # 🟢 FIXED: Variable to track the guess made
+        self.last_guess = ""
 
     def start_game(self, answer: str = None):
         self.kb.reset()
         self.turn = 0
         self.game_over = False
-        self.last_guess = ""  # Reset last guess
+        self.last_guess = ""
 
-        # Determine Mode:
-        if answer is None:
-            # If no answer is provided (as in train.py), activate Engine Mode with a random word.
-            self.answer = random.choice(self.kb.answers).upper()
-        elif answer.upper() == "HELPER_MODE":
-            # If the GUI passes a specific flag, activate Helper Mode.
-            self.answer = None
+        if answer is None or answer == "HELPER_MODE":
+            self.answer = None  # Helper Mode
         else:
-            # If a specific word is provided (Demo), use it.
-            self.answer = answer.upper()
+            self.answer = answer.upper()  # Engine Mode — THIS MUST BE SET
 
     def get_guess(self) -> str:
         if self.turn == 0:
@@ -47,28 +43,27 @@ class WordleSolver:
             return self.planner.plan_next_guess()
 
     def submit_feedback(self, feedback_text: str):
-        # 🟢 FIXED: Use the guess pre-set by the GUI/Training script
         guess = self.last_guess
-
         if not guess:
-            raise ValueError("Solver error: No guess was made. Set self.last_guess first.")
+            raise ValueError("Solver error: No guess was made.")
 
         actual = ""
-
-        # 🟢 FIXED: Corrected mode check logic
         if self.answer:
-            # 🤖 Engine Mode (self.answer is set): Calculate feedback automatically
+            # 🤖 Engine Mode: Answer is set, calculate feedback
             actual = feedback_pattern(guess, self.answer)
         elif feedback_text:
-            # ✍️ Helper Mode (self.answer is None): Use user's input
+            # ✍️ Helper Mode: Answer is None, use and parse user's text feedback
             actual = parse_feedback(feedback_text)
         else:
-            # This block is now ONLY reached if Helper Mode is active AND no feedback was entered.
-            raise ValueError("Feedback required. Please enter 5 G/Y/B characters for Helper Mode.")
+            # Should be caught by the UI, but here for robustness
+            raise ValueError("Feedback required. Please enter 5 G/Y/B characters.")
+
+        if len(self.kb.possible) == 0 and actual != "GGGGG":
+            raise ValueError(f"Feedback '{actual}' is inconsistent with history. No possible words left.")
 
         self.kb.apply_feedback(guess, actual)
 
-        # --- RL Update Logic ---
+        # --- RL Update Logic (Used in both modes) ---
         state = self.rl._state_key(len(self.kb.possible), self.turn)
         next_state = self.rl._state_key(len(self.kb.possible), self.turn + 1)
         reward = 10 if actual == "GGGGG" else -1 * (self.turn + 1)
